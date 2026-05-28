@@ -1,297 +1,463 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bundesliga Cup</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bundesliga Cup</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
+<style>
 
-    body{
-      background:#0b5c2d;
-      color:white;
-      overflow:hidden;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
 
-    h1,h2,h3{
-      text-align:center;
-      margin:10px;
-    }
+body{
+    background:#0b5c2d;
+    color:white;
+    overflow:hidden;
+}
 
-    .screen{
-      width:100vw;
-      height:100vh;
-      display:none;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      overflow:auto;
-      padding:20px;
-    }
+/* =========================
+   SCREENS
+========================= */
 
-    .active{
-      display:flex;
-    }
+.screen{
+    width:100vw;
+    height:100vh;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    overflow:auto;
+    padding:20px;
+}
 
-    /* TEAM AUSWAHL */
+.active{
+    display:flex;
+}
 
-    .teams{
-      width:100%;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:15px;
-      margin-top:20px;
-    }
+h1,h2,h3{
+    margin:10px;
+}
 
-    .team-card{
-      background:#114f2d;
-      border:3px solid transparent;
-      border-radius:12px;
-      padding:15px;
-      text-align:center;
-      cursor:pointer;
-      transition:0.2s;
-    }
+/* =========================
+   STARTSCREEN
+========================= */
 
-    .team-card:hover{
-      transform:scale(1.05);
-      border-color:gold;
-    }
+.trophy{
+    position:absolute;
+    top:15px;
+    right:20px;
+    font-size:40px;
+}
 
-    .team-logo{
-      font-size:42px;
-      margin-bottom:10px;
-    }
+.teams{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
 
-    .trophy{
-      position:absolute;
-      top:10px;
-      right:20px;
-      font-size:40px;
-    }
+.team-card{
+    background:#14592f;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.2s;
+    border:3px solid transparent;
+}
 
-    /* TURNIERBAUM */
+.team-card:hover{
+    transform:scale(1.05);
+    border-color:gold;
+}
 
-    .bracket{
-      margin-top:20px;
-      width:100%;
-      display:flex;
-      justify-content:space-around;
-      flex-wrap:wrap;
-    }
+.team-logo{
+    font-size:42px;
+    margin-bottom:10px;
+}
 
-    .round{
-      background:#134f2d;
-      padding:15px;
-      border-radius:12px;
-      min-width:180px;
-      margin:10px;
-    }
+/* =========================
+   TURNIER
+========================= */
 
-    .match{
-      background:#1c6d40;
-      margin:10px 0;
-      padding:10px;
-      border-radius:8px;
-    }
+.bracket{
+    display:flex;
+    gap:30px;
+    margin-top:30px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
 
-    .current{
-      border:2px solid gold;
-    }
+.round{
+    background:#14592f;
+    padding:20px;
+    border-radius:12px;
+    width:200px;
+}
 
-    /* SPIEL */
+.match{
+    background:#1d7741;
+    margin-top:10px;
+    padding:12px;
+    border-radius:8px;
+}
 
-    #gameContainer{
-      position:relative;
-      width:1000px;
-      height:500px;
-      background:#2ca34f;
-      overflow:hidden;
-      border:6px solid white;
-      margin-top:10px;
-    }
+.current{
+    border:2px solid gold;
+}
 
-    #fieldLine{
-      position:absolute;
-      left:50%;
-      top:0;
-      width:4px;
-      height:100%;
-      background:white;
-    }
+button{
+    margin-top:30px;
+    padding:12px 30px;
+    border:none;
+    border-radius:10px;
+    background:gold;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-    .goal{
-      position:absolute;
-      width:30px;
-      height:140px;
-      background:white;
-      top:180px;
-    }
+/* =========================
+   SCOREBOARD
+========================= */
 
-    #goalLeft{
-      left:0;
-    }
+#scoreboard{
+    width:1000px;
+    display:flex;
+    justify-content:space-between;
+    font-size:30px;
+    margin-bottom:10px;
+}
 
-    #goalRight{
-      right:0;
-    }
+/* =========================
+   SPIELFELD
+========================= */
 
-    .player{
-      position:absolute;
-      width:50px;
-      height:80px;
-      border-radius:10px;
-      bottom:40px;
-    }
+#gameContainer{
+    position:relative;
+    width:1000px;
+    height:500px;
+    overflow:hidden;
+    border:6px solid white;
 
-    #player{
-      background:blue;
-      left:150px;
-    }
+    background:
+    repeating-linear-gradient(
+        90deg,
+        #2fa84f 0px,
+        #2fa84f 60px,
+        #2c9e49 60px,
+        #2c9e49 120px
+    );
+}
 
-    #ai{
-      background:red;
-      right:150px;
-    }
+/* Feldlinien */
 
-    #ball{
-      position:absolute;
-      width:35px;
-      height:35px;
-      border-radius:50%;
-      background:white;
-      border:3px solid black;
-      left:480px;
-      top:200px;
-    }
+.field-line{
+    position:absolute;
+    background:white;
+}
 
-    #scoreboard{
-      width:1000px;
-      display:flex;
-      justify-content:space-between;
-      font-size:26px;
-      margin-top:10px;
-    }
+#middleLine{
+    width:4px;
+    height:100%;
+    left:50%;
+    top:0;
+}
 
-    #controls{
-      margin-top:10px;
-      font-size:18px;
-    }
+#middleCircle{
+    position:absolute;
+    width:140px;
+    height:140px;
+    border:4px solid white;
+    border-radius:50%;
+    left:430px;
+    top:180px;
+}
 
-    button{
-      padding:10px 20px;
-      border:none;
-      border-radius:8px;
-      background:gold;
-      cursor:pointer;
-      font-weight:bold;
-      margin-top:20px;
-    }
-  </style>
+/* Tore */
+
+.goal{
+    position:absolute;
+    width:18px;
+    height:170px;
+    background:white;
+    top:165px;
+}
+
+#goalLeft{
+    left:-6px;
+}
+
+#goalRight{
+    right:-6px;
+}
+
+/* =========================
+   SPIELER
+========================= */
+
+.player{
+    position:absolute;
+    width:60px;
+    height:100px;
+    bottom:40px;
+}
+
+/* Kopf */
+
+.head{
+    position:absolute;
+    width:26px;
+    height:26px;
+    background:#ffd2a1;
+    border-radius:50%;
+    left:17px;
+    top:0;
+}
+
+/* Körper */
+
+.body{
+    position:absolute;
+    width:34px;
+    height:40px;
+    left:13px;
+    top:24px;
+    border-radius:8px;
+}
+
+/* Farben */
+
+#player .body{
+    background:#0057ff;
+}
+
+#ai .body{
+    background:#d90000;
+}
+
+/* Arme */
+
+.arm{
+    position:absolute;
+    width:10px;
+    height:30px;
+    background:#ffd2a1;
+    top:28px;
+    border-radius:10px;
+    transform-origin:top center;
+}
+
+.left-arm{
+    left:2px;
+}
+
+.right-arm{
+    right:2px;
+}
+
+/* Beine */
+
+.leg{
+    position:absolute;
+    width:10px;
+    height:38px;
+    background:#111;
+    top:60px;
+    border-radius:10px;
+    transform-origin:top center;
+}
+
+.left-leg{
+    left:16px;
+}
+
+.right-leg{
+    right:16px;
+}
+
+/* =========================
+   LAUFANIMATION
+========================= */
+
+.running .left-leg{
+    animation:runLeg1 0.25s infinite alternate;
+}
+
+.running .right-leg{
+    animation:runLeg2 0.25s infinite alternate;
+}
+
+.running .left-arm{
+    animation:runArm1 0.25s infinite alternate;
+}
+
+.running .right-arm{
+    animation:runArm2 0.25s infinite alternate;
+}
+
+@keyframes runLeg1{
+    from{transform:rotate(-25deg);}
+    to{transform:rotate(25deg);}
+}
+
+@keyframes runLeg2{
+    from{transform:rotate(25deg);}
+    to{transform:rotate(-25deg);}
+}
+
+@keyframes runArm1{
+    from{transform:rotate(20deg);}
+    to{transform:rotate(-20deg);}
+}
+
+@keyframes runArm2{
+    from{transform:rotate(-20deg);}
+    to{transform:rotate(20deg);}
+}
+
+/* =========================
+   SCHUSSANIMATION
+========================= */
+
+.kicking .right-leg{
+    animation:kick 0.2s;
+}
+
+@keyframes kick{
+    0%{transform:rotate(0deg);}
+    50%{transform:rotate(-75deg);}
+    100%{transform:rotate(0deg);}
+}
+
+/* =========================
+   BALL
+========================= */
+
+#ball{
+    position:absolute;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:white;
+    border:3px solid black;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+#controls{
+    margin-top:15px;
+    font-size:18px;
+}
+
+</style>
 </head>
 <body>
 
-<!-- START -->
-
 <div id="startScreen" class="screen active">
-  <div class="trophy" id="trophyDisplay"></div>
 
-  <h1>🏆 Bundesliga Cup</h1>
-  <h2>Wähle dein Team</h2>
+    <div class="trophy" id="trophyDisplay"></div>
 
-  <div class="teams" id="teamsContainer"></div>
+    <h1>🏆 Bundesliga Cup</h1>
+    <h2>Wähle dein Team</h2>
+
+    <div class="teams" id="teamsContainer"></div>
+
 </div>
-
-<!-- TURNIER -->
 
 <div id="tournamentScreen" class="screen">
-  <h1>Turnierbaum</h1>
 
-  <div class="bracket">
-    <div class="round">
-      <h3>Achtelfinale</h3>
-      <div id="round16"></div>
+    <h1>Turnierbaum</h1>
+
+    <div class="bracket">
+
+        <div class="round">
+            <h3>Achtelfinale</h3>
+            <div id="round16"></div>
+        </div>
+
+        <div class="round">
+            <h3>Viertelfinale</h3>
+            <div id="quarter"></div>
+        </div>
+
+        <div class="round">
+            <h3>Halbfinale</h3>
+            <div id="semi"></div>
+        </div>
+
+        <div class="round">
+            <h3>Finale</h3>
+            <div id="final"></div>
+        </div>
+
     </div>
 
-    <div class="round">
-      <h3>Viertelfinale</h3>
-      <div id="quarter"></div>
-    </div>
+    <button onclick="startMatch()">Spiel starten</button>
 
-    <div class="round">
-      <h3>Halbfinale</h3>
-      <div id="semi"></div>
-    </div>
-
-    <div class="round">
-      <h3>Finale</h3>
-      <div id="final"></div>
-    </div>
-  </div>
-
-  <button onclick="startMatch()">Spiel starten</button>
 </div>
 
-<!-- SPIEL -->
-
 <div id="gameScreen" class="screen">
-  <h1 id="matchTitle">Spiel</h1>
 
-  <div id="scoreboard">
-    <div id="scoreLeft">0</div>
-    <div id="timer">90</div>
-    <div id="scoreRight">0</div>
-  </div>
+    <h1 id="matchTitle">Spiel</h1>
 
-  <div id="gameContainer">
-    <div id="fieldLine"></div>
+    <div id="scoreboard">
+        <div id="scoreLeft">0</div>
+        <div id="timer">90</div>
+        <div id="scoreRight">0</div>
+    </div>
 
-    <div class="goal" id="goalLeft"></div>
-    <div class="goal" id="goalRight"></div>
+    <div id="gameContainer">
 
-    <div id="player" class="player"></div>
-    <div id="ai" class="player"></div>
+        <div class="field-line" id="middleLine"></div>
+        <div id="middleCircle"></div>
 
-    <div id="ball"></div>
-  </div>
+        <div class="goal" id="goalLeft"></div>
+        <div class="goal" id="goalRight"></div>
 
-  <div id="controls">
-    ⬅ ➡ = Laufen |
-    ⬆ = Springen/Kopfball |
-    ⬇ = Schießen
-  </div>
+        <div id="player" class="player"></div>
+        <div id="ai" class="player"></div>
+
+        <div id="ball"></div>
+
+    </div>
+
+    <div id="controls">
+        ⬅ ➡ = Laufen |
+        ⬆ = Springen/Kopfball |
+        ⬇ = Schießen
+    </div>
+
 </div>
 
 <script>
-/* =========================
-   TEAMS
-========================= */
 
 const teams = [
-  {name:"Bayern", logo:"🔴"},
-  {name:"Dortmund", logo:"🟡"},
-  {name:"Leverkusen", logo:"⚫"},
-  {name:"Leipzig", logo:"🔵"},
-  {name:"Stuttgart", logo:"⚪"},
-  {name:"Frankfurt", logo:"🦅"},
-  {name:"Wolfsburg", logo:"🐺"},
-  {name:"Freiburg", logo:"⚫"},
-  {name:"Union Berlin", logo:"🔴"},
-  {name:"Gladbach", logo:"🟢"},
-  {name:"Mainz", logo:"🔴"},
-  {name:"Bochum", logo:"🔵"},
-  {name:"Köln", logo:"🐐"},
-  {name:"Augsburg", logo:"🟢"},
-  {name:"Bremen", logo:"🟩"},
-  {name:"Heidenheim", logo:"🔴"},
-  {name:"Hoffenheim", logo:"🔵"},
-  {name:"Hamburg", logo:"⚫"}
+    {name:"Bayern", logo:"🔴"},
+    {name:"Dortmund", logo:"🟡"},
+    {name:"Leverkusen", logo:"⚫"},
+    {name:"Leipzig", logo:"🔵"},
+    {name:"Stuttgart", logo:"⚪"},
+    {name:"Frankfurt", logo:"🦅"},
+    {name:"Wolfsburg", logo:"🐺"},
+    {name:"Freiburg", logo:"⚫"},
+    {name:"Union Berlin", logo:"🔴"},
+    {name:"Gladbach", logo:"🟢"},
+    {name:"Mainz", logo:"🔴"},
+    {name:"Bochum", logo:"🔵"},
+    {name:"Köln", logo:"🐐"},
+    {name:"Augsburg", logo:"🟢"},
+    {name:"Bremen", logo:"🟩"},
+    {name:"Heidenheim", logo:"🔴"},
+    {name:"Hoffenheim", logo:"🔵"},
+    {name:"Hamburg", logo:"⚫"}
 ];
 
 const teamsContainer = document.getElementById("teamsContainer");
@@ -300,83 +466,106 @@ let selectedTeam = null;
 let currentRound = 0;
 let trophies = 0;
 
-let rounds = [
-  "Achtelfinale",
-  "Viertelfinale",
-  "Halbfinale",
-  "Finale"
+const rounds = [
+    "Achtelfinale",
+    "Viertelfinale",
+    "Halbfinale",
+    "Finale"
 ];
 
 teams.forEach(team => {
-  const div = document.createElement("div");
-  div.className = "team-card";
-  div.innerHTML = `
-    <div class="team-logo">${team.logo}</div>
-    <h3>${team.name}</h3>
-  `;
 
-  div.onclick = () => selectTeam(team);
+    const div = document.createElement("div");
 
-  teamsContainer.appendChild(div);
+    div.className = "team-card";
+
+    div.innerHTML = `
+        <div class="team-logo">${team.logo}</div>
+        <h3>${team.name}</h3>
+    `;
+
+    div.onclick = () => selectTeam(team);
+
+    teamsContainer.appendChild(div);
 });
 
-/* =========================
-   TURNIER
-========================= */
+function showScreen(id){
+
+    document.querySelectorAll(".screen")
+    .forEach(s => s.classList.remove("active"));
+
+    document.getElementById(id)
+    .classList.add("active");
+}
 
 function selectTeam(team){
-  selectedTeam = team;
-  currentRound = 0;
 
-  showScreen("tournamentScreen");
+    selectedTeam = team;
+    currentRound = 0;
 
-  renderBracket();
+    renderBracket();
+
+    showScreen("tournamentScreen");
 }
 
 function renderBracket(){
 
-  document.getElementById("round16").innerHTML = "";
-  document.getElementById("quarter").innerHTML = "";
-  document.getElementById("semi").innerHTML = "";
-  document.getElementById("final").innerHTML = "";
+    document.getElementById("round16").innerHTML = "";
+    document.getElementById("quarter").innerHTML = "";
+    document.getElementById("semi").innerHTML = "";
+    document.getElementById("final").innerHTML = "";
 
-  const ids = ["round16","quarter","semi","final"];
+    const ids = ["round16","quarter","semi","final"];
 
-  rounds.forEach((round, index)=>{
+    rounds.forEach((round,index)=>{
 
-    const container = document.getElementById(ids[index]);
+        const match = document.createElement("div");
 
-    const match = document.createElement("div");
-    match.className = "match";
+        match.className = "match";
 
-    if(index === currentRound){
-      match.classList.add("current");
-    }
+        if(index === currentRound){
+            match.classList.add("current");
+        }
 
-    if(index < currentRound){
-      match.innerHTML = "✅ Gewonnen";
-    } else if(index === currentRound){
-      match.innerHTML = `${selectedTeam.name} vs Gegner`;
-    } else {
-      match.innerHTML = "???";
-    }
+        if(index < currentRound){
+            match.innerHTML = "✅ Gewonnen";
+        }
+        else if(index === currentRound){
+            match.innerHTML = `${selectedTeam.name} vs Gegner`;
+        }
+        else{
+            match.innerHTML = "???";
+        }
 
-    container.appendChild(match);
-  });
+        document.getElementById(ids[index]).appendChild(match);
+    });
 }
 
-/* =========================
-   SPIEL
-========================= */
+function createHuman(id){
 
-const gameContainer = document.getElementById("gameContainer");
+    const p = document.getElementById(id);
+
+    p.innerHTML = `
+        <div class="head"></div>
+        <div class="body"></div>
+
+        <div class="arm left-arm"></div>
+        <div class="arm right-arm"></div>
+
+        <div class="leg left-leg"></div>
+        <div class="leg right-leg"></div>
+    `;
+}
+
+createHuman("player");
+createHuman("ai");
 
 const player = document.getElementById("player");
 const ai = document.getElementById("ai");
 const ball = document.getElementById("ball");
 
-let playerX = 150;
-let aiX = 800;
+let playerX = 120;
+let aiX = 820;
 
 let playerY = 0;
 let aiY = 0;
@@ -385,294 +574,309 @@ let velocityY = 0;
 let aiVelocityY = 0;
 
 let ballX = 480;
-let ballY = 200;
+let ballY = 220;
 
 let ballVX = 0;
 let ballVY = 0;
 
-let keys = {};
-
 let scoreLeft = 0;
 let scoreRight = 0;
 
-let gameTimer = 90;
-
 let difficulty = 1;
 
+let gameTimer = 90;
+
+let gameLoop;
+let timerInterval;
+
+let keys = {};
+
 document.addEventListener("keydown", e=>{
-  keys[e.key] = true;
+    keys[e.key] = true;
 });
 
 document.addEventListener("keyup", e=>{
-  keys[e.key] = false;
+    keys[e.key] = false;
 });
 
 function startMatch(){
 
-  difficulty = currentRound + 1;
+    difficulty = currentRound + 1;
 
-  scoreLeft = 0;
-  scoreRight = 0;
-  gameTimer = 90;
+    scoreLeft = 0;
+    scoreRight = 0;
 
-  playerX = 150;
-  aiX = 800;
+    gameTimer = 90;
 
-  resetBall();
+    playerX = 120;
+    aiX = 820;
 
-  document.getElementById("scoreLeft").innerText = scoreLeft;
-  document.getElementById("scoreRight").innerText = scoreRight;
+    playerY = 0;
+    aiY = 0;
 
-  document.getElementById("matchTitle").innerText =
+    resetBall();
+
+    updateScore();
+
+    document.getElementById("matchTitle").innerText =
     rounds[currentRound];
 
-  showScreen("gameScreen");
+    showScreen("gameScreen");
 
-  startGameLoop();
-
-  startTimer();
+    startTimer();
+    startGameLoop();
 }
 
-let gameLoop;
+function startTimer(){
+
+    clearInterval(timerInterval);
+
+    document.getElementById("timer").innerText = gameTimer;
+
+    timerInterval = setInterval(()=>{
+
+        gameTimer--;
+
+        document.getElementById("timer").innerText = gameTimer;
+
+        if(gameTimer <= 0){
+
+            clearInterval(timerInterval);
+
+            endMatch();
+        }
+
+    },1000);
+}
 
 function startGameLoop(){
 
-  cancelAnimationFrame(gameLoop);
+    cancelAnimationFrame(gameLoop);
 
-  function loop(){
+    function loop(){
 
-    update();
-    draw();
+        update();
+        draw();
 
-    gameLoop = requestAnimationFrame(loop);
-  }
+        gameLoop = requestAnimationFrame(loop);
+    }
 
-  loop();
+    loop();
 }
 
 function update(){
 
-  /* SPIELER */
+    let moving = false;
 
-  if(keys["ArrowLeft"]){
-    playerX -= 6;
-  }
+    if(keys["ArrowLeft"]){
 
-  if(keys["ArrowRight"]){
-    playerX += 6;
-  }
-
-  if(keys["ArrowUp"] && playerY === 0){
-    velocityY = 14;
-  }
-
-  if(keys["ArrowDown"]){
-
-    const dx = ballX - playerX;
-
-    if(Math.abs(dx) < 80){
-      ballVX = 10;
-      ballVY = -5;
+        playerX -= 5;
+        moving = true;
     }
-  }
 
-  velocityY -= 0.7;
-  playerY += velocityY;
+    if(keys["ArrowRight"]){
 
-  if(playerY < 0){
-    playerY = 0;
-    velocityY = 0;
-  }
+        playerX += 5;
+        moving = true;
+    }
 
-  /* KI */
+    if(moving){
+        player.classList.add("running");
+    }
+    else{
+        player.classList.remove("running");
+    }
 
-  if(ballX > aiX){
-    aiX += 2 + difficulty;
-  } else {
-    aiX -= 2 + difficulty;
-  }
+    if(keys["ArrowUp"] && playerY === 0){
+        velocityY = 14;
+    }
 
-  if(ballY < 220 && aiY === 0){
-    aiVelocityY = 12;
-  }
+    if(keys["ArrowDown"]){
 
-  aiVelocityY -= 0.7;
-  aiY += aiVelocityY;
+        if(Math.abs(ballX - playerX) < 90){
 
-  if(aiY < 0){
-    aiY = 0;
-    aiVelocityY = 0;
-  }
+            ballVX = 11;
+            ballVY = -7;
 
-  /* KI SCHUSS */
+            player.classList.add("kicking");
 
-  if(Math.abs(ballX - aiX) < 70){
-    ballVX = -7 - difficulty;
-    ballVY = -4;
-  }
+            setTimeout(()=>{
+                player.classList.remove("kicking");
+            },200);
+        }
+    }
 
-  /* BALL */
+    velocityY -= 0.7;
+    playerY += velocityY;
 
-  ballVY += 0.4;
+    if(playerY < 0){
 
-  ballX += ballVX;
-  ballY += ballVY;
+        playerY = 0;
+        velocityY = 0;
+    }
 
-  ballVX *= 0.99;
+    const aiSpeed = 1 + (difficulty * 0.5);
 
-  if(ballY > 425){
-    ballY = 425;
-    ballVY *= -0.8;
-  }
+    if(ballX > aiX + 20){
 
-  /* KOLLISION */
+        aiX += aiSpeed;
+        ai.classList.add("running");
+    }
+    else if(ballX < aiX - 20){
 
-  if(collide(playerX, 380-playerY, ballX, ballY)){
-    ballVX = 7;
-    ballVY = -6;
-  }
+        aiX -= aiSpeed;
+        ai.classList.add("running");
+    }
+    else{
+        ai.classList.remove("running");
+    }
 
-  if(collide(aiX, 380-aiY, ballX, ballY)){
-    ballVX = -7;
-    ballVY = -6;
-  }
+    if(Math.random() < 0.003 && aiY === 0){
+        aiVelocityY = 10;
+    }
 
-  /* TORE */
+    aiVelocityY -= 0.7;
+    aiY += aiVelocityY;
 
-  if(ballX < 20){
-    scoreRight++;
-    updateScore();
-    resetBall();
-  }
+    if(aiY < 0){
 
-  if(ballX > 945){
-    scoreLeft++;
-    updateScore();
-    resetBall();
-  }
+        aiY = 0;
+        aiVelocityY = 0;
+    }
 
-  /* GRENZEN */
+    if(Math.abs(ballX - aiX) < 60){
 
-  if(playerX < 0) playerX = 0;
-  if(playerX > 950) playerX = 950;
+        ballVX = -4 - difficulty;
+        ballVY = -3;
 
-  if(aiX < 0) aiX = 0;
-  if(aiX > 950) aiX = 950;
+        ai.classList.add("kicking");
+
+        setTimeout(()=>{
+            ai.classList.remove("kicking");
+        },200);
+    }
+
+    ballVY += 0.35;
+
+    ballX += ballVX;
+    ballY += ballVY;
+
+    ballVX *= 0.992;
+
+    if(ballY > 425){
+
+        ballY = 425;
+        ballVY *= -0.75;
+    }
+
+    if(collide(playerX,360-playerY,ballX,ballY)){
+
+        ballVX = 7;
+        ballVY = -5;
+    }
+
+    if(collide(aiX,360-aiY,ballX,ballY)){
+
+        ballVX = -5;
+        ballVY = -5;
+    }
+
+    if(ballX < -10){
+
+        scoreRight++;
+        updateScore();
+
+        resetBall();
+    }
+
+    if(ballX > 975){
+
+        scoreLeft++;
+        updateScore();
+
+        resetBall();
+    }
+
+    if(playerX < 0) playerX = 0;
+    if(playerX > 940) playerX = 940;
+
+    if(aiX < 0) aiX = 0;
+    if(aiX > 940) aiX = 940;
 }
 
-function collide(px, py, bx, by){
+function collide(px,py,bx,by){
 
-  return (
-    bx < px + 60 &&
-    bx + 35 > px &&
-    by < py + 90 &&
-    by + 35 > py
-  );
+    return (
+        bx < px + 60 &&
+        bx + 35 > px &&
+        by < py + 100 &&
+        by + 35 > py
+    );
 }
 
 function draw(){
 
-  player.style.left = playerX + "px";
-  player.style.bottom = (40 + playerY) + "px";
+    player.style.left = playerX + "px";
+    player.style.bottom = (40 + playerY) + "px";
 
-  ai.style.left = aiX + "px";
-  ai.style.bottom = (40 + aiY) + "px";
+    ai.style.left = aiX + "px";
+    ai.style.bottom = (40 + aiY) + "px";
 
-  ball.style.left = ballX + "px";
-  ball.style.top = ballY + "px";
+    ball.style.left = ballX + "px";
+    ball.style.top = ballY + "px";
 }
 
 function resetBall(){
 
-  ballX = 480;
-  ballY = 220;
+    ballX = 480;
+    ballY = 220;
 
-  ballVX = (Math.random()*6)-3;
-  ballVY = -2;
+    ballVX = (Math.random() * 4) - 2;
+    ballVY = -2;
 }
 
 function updateScore(){
 
-  document.getElementById("scoreLeft").innerText = scoreLeft;
-  document.getElementById("scoreRight").innerText = scoreRight;
-}
-
-/* =========================
-   TIMER
-========================= */
-
-let timerInterval;
-
-function startTimer(){
-
-  clearInterval(timerInterval);
-
-  document.getElementById("timer").innerText = gameTimer;
-
-  timerInterval = setInterval(()=>{
-
-    gameTimer--;
-
-    document.getElementById("timer").innerText = gameTimer;
-
-    if(gameTimer <= 0){
-
-      clearInterval(timerInterval);
-
-      endMatch();
-    }
-
-  },1000);
+    document.getElementById("scoreLeft").innerText = scoreLeft;
+    document.getElementById("scoreRight").innerText = scoreRight;
 }
 
 function endMatch(){
 
-  cancelAnimationFrame(gameLoop);
+    cancelAnimationFrame(gameLoop);
 
-  if(scoreLeft > scoreRight){
+    if(scoreLeft > scoreRight){
 
-    currentRound++;
+        currentRound++;
 
-    if(currentRound >= rounds.length){
+        if(currentRound >= rounds.length){
 
-      trophies++;
+            trophies++;
 
-      document.getElementById("trophyDisplay").innerText =
-        "🏆".repeat(trophies);
+            document.getElementById("trophyDisplay").innerText =
+            "🏆".repeat(trophies);
 
-      alert("DU HAST DAS TURNIER GEWONNEN!");
+            alert("DU HAST DAS TURNIER GEWONNEN!");
 
-      showScreen("startScreen");
+            showScreen("startScreen");
+        }
+        else{
 
-    } else {
+            alert("Gewonnen! Nächste Runde!");
 
-      alert("Gewonnen! Nächste Runde!");
+            renderBracket();
 
-      renderBracket();
-
-      showScreen("tournamentScreen");
+            showScreen("tournamentScreen");
+        }
     }
+    else{
 
-  } else {
+        alert("Verloren! Du bist ausgeschieden.");
 
-    alert("Verloren! Du bist ausgeschieden.");
-
-    showScreen("startScreen");
-  }
+        showScreen("startScreen");
+    }
 }
 
-/* =========================
-   SCREENS
-========================= */
-
-function showScreen(id){
-
-  document.querySelectorAll(".screen")
-    .forEach(s=>s.classList.remove("active"));
-
-  document.getElementById(id)
-    .classList.add("active");
-}
 </script>
 
 </body>
